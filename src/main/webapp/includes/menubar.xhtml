@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ul class="nav navbar-nav">
+        <li>
+            <p:link href="/index.xhtml" onclick="clearBreadCrumbs()">
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </p:link>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">ROAD SIGNS SETUP <span
+                    class="caret"></span>
+                <i class="fa fa-car"></i>
+            </a>
+
+            <ul class="dropdown-menu" role="menu">
+                <li>
+                    <p:link href="/maps.xhtml">
+                        <i class="fa fa-map-marker"></i>
+                        <span>SIGN SPOTS</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/sign.xhtml">
+                        <i class="fa  fa-money"></i>
+                        <span>CREATE SIGNS</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/roadSign.xhtml">
+                        <i class="fa fa-dashboard"></i>
+                        <span>ASSIGN SIGNS</span>
+                    </p:link>
+                </li>
+
+                <li>
+                    <p:link href="/audit.xhtml">
+                        <i class="fa fa-info-circle"></i>
+                        <span>SYSTEM AUDIT</span>
+                    </p:link>
+                </li>
+
+
+                <li>
+                    <p:link href="/criteriaReports.xhtml">
+                        <i class="fa  fa-bar-chart"></i>
+                        <span>SYSTEM REPORTS<br/></span>
+                    </p:link>
+                </li>
+
+
+            </ul>
+
+        </li>
+
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> USER MANAGEMENT <span
+                    class="caret"></span>
+                <i class="fa fa-car"></i>
+            </a>
+
+            <ul class="dropdown-menu" role="menu">
+                <li>
+                    <p:link href="/users.xhtml">
+                        <i class="fa fa-user"></i>
+                        <span>REGISTER USERS</span>
+                    </p:link>
+                </li>
+
+
+                <li>
+                    <p:link href="/status.xhtml">
+                        <i class="fa  fa-hourglass-2"></i>
+                        <span>STATUS</span>
+                    </p:link>
+                </li>
+                <li>
+                    <p:link href="/groups.xhtml"> 
+                        <i class="fa fa-object-ungroup"></i>
+                        <span>USER GROUPS</span>
+                    </p:link>
+                </li>
+
+
+            </ul>
+
+        </li>
+    </ul>
+
+</ui:composition>

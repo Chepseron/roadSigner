@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="#{layoutMB.layout}">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="true"/>
+    </ui:define>
+
+    <ui:define name="title">
+    </ui:define>
+    <ui:define name="body">
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <div id="main-buttons" class="hidden-sm hidden-xs">
+                    <h:form id="editForm1">
+                        <p:commandButton action="car-form?faces-redirect=true" icon="fa fa-plus"
+                                         value="New" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Delete Selected" icon="fa fa-trash" styleClass="btn-danger"
+                                         process="@this" update="@form"
+                                         >
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Search" update="@(.ui-dialog)" styleClass="btn-info"
+                                         oncomplete="PF('searchDialog').show()" icon="fa fa-search"/>
+
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Clear" update="@(.ui-dialog, .ui-datatable)" process="@form"
+
+                                         icon="fa fa-refresh"/>
+                    </h:form>
+                </div>
+                <h:form id="ButtonsForm">
+                    <p:splitButton value="New" action="car-form?faces-redirect=true"
+                                   icon="fa fa-plus"
+                                   styleClass="hidden-md hidden-lg btn-primary">
+                        <p:menuitem value="Delete Selected" 
+                                    process="@this" update="@form" 
+                                    icon="fa fa-trash">
+                            <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-danger"/>
+                        </p:menuitem>
+                        <p:menuitem value="Search" update="@(.ui-dialog)"
+                                    oncomplete="PF('searchDialog').show()"
+                                    icon="fa fa-search"/>
+                        <p:menuitem value="Clear" update="@(.ui-dialog, .ui-datatable)" process="@form"
+                                    icon="fa fa-refresh"/>
+                    </p:splitButton>
+                </h:form>
+                <p:separator/>
+
+                <p:panel id="spanel"   style="margin: 4em; background: transparent;  position: relative; border: 0">
+                    <h:panelGrid columns="1">
+                        <p:growl id="msgs1" sticky="true" showDetail="true" />
+                        <p:tabView  styleClass="si-icon-16x16 si-icon-edit"    style="background: transparent; width: 100%; height: 100%; border: 0" >  
+                            <p:tab title="ASSIGN A SIGN TO A ROAD" >
+                                <h:form id="activityForm" style="width: auto" > 
+
+                                    <h:panelGrid columns="1" >
+                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-fluid card">
+                                            <p:outputLabel value="Road sign"/>
+                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.roadsigns.signid}"  >
+                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                <f:selectItems value="#{acc.signList}"  var="stats" itemValue="#{stats.idsigns}" itemLabel="#{stats.signname}" />
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Date installed"/>
+                                            <p:calendar   style="width:200px"   value="#{acc.roadsigns.dateinstalled}" />
+                                            <p:outputLabel value="Description"/>
+                                            <p:inputTextarea   style="width:200px"   value="#{acc.roadsigns.description}" />
+                                            <p:outputLabel value="Name of place with sign"/>
+                                            <p:inputText   style="width:200px"   value="#{acc.roadsigns.placeName}" />
+                                            <p:outputLabel value="Road Name"/>
+                                            <p:inputText   style="width:200px"   value="#{acc.roadsigns.roadName}" />
+                                            <p:outputLabel value="Latitude"/>
+                                            <inputText   style="width:200px; color: orange" binding="#{latitude}" id="latitude"/>
+                                            <p:outputLabel value="Longitude"/>
+                                            <inputText   style="width:200px; color: orange" binding="#{longitude}" id="longitude"/>
+                                            <p:messages for="userForm"  showDetail="true" />
+                                        </p:panelGrid>
+                                        <h:panelGrid columns="8">
+                                            <p:commandButton value="SUBMIT"  icon="fa fa-plus" class="find-me" styleClass="btn-primary"  action="#{acc.createRoadsign(latitude.value,longitude.value)}"/>
+                                            <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="REGISTERED ROAD SIGNS">
+                                <h:form id="roadsignsForm" style="width: auto" >
+                                    <p:dataTable var="roadsigns" value="#{acc.roadsignList}" 
+                                                 paginator="true" rows="10"
+
+                                                 style="background: transparent; font-size:11px"
+                                                 id="activitysTable"
+                                                 emptyMessage="No reported roadsigns found with given criteria" filteredValue="#{acc.roadsignList}">
+
+                                        <p:column filterBy="#{roadsigns.roadName}" sortBy="#{roadsigns.roadName}" headerText="Road Name">
+                                            <p:outputLabel value="#{roadsigns.roadName}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.createdBy}" sortBy="#{roadsigns.createdBy}" headerText="Registered BY">
+                                            <p:outputLabel value="#{roadsigns.createdBy}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.createdOn}" sortBy="#{roadsigns.createdOn}" headerText="created On">
+                                            <p:outputLabel value="#{roadsigns.createdOn}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.dateinstalled}" sortBy="#{roadsigns.dateinstalled}" headerText="Date Installed">
+                                            <p:outputLabel value="#{roadsigns.dateinstalled}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.lat}" sortBy="#{roadsigns.lat}" headerText="Latitude">
+                                            <p:outputLabel value="#{roadsigns.lat}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.long1}" sortBy="#{roadsigns.long1}" headerText="Longitude">
+                                            <p:outputLabel value="#{roadsigns.long1}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.placeName}" sortBy="#{roadsigns.placeName}" headerText="placeName">
+                                            <p:outputLabel value="#{roadsigns.placeName}" />
+                                        </p:column>
+                                        <p:column style="width:4%">
+                                            <p:commandLink process="@this" styleClass="si-icon-16x16 si-icon-edit" update=":editForm:roadsignsDetail" oncomplete="PF('roadsignsDialog').show()"  value="DETAILS"   title="Edit  #{roadsigns.roadName}'s DETAILS">                                                  
+                                                <f:setPropertyActionListener value="#{roadsigns}"   target="#{acc.roadsigns}" />  
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>
+                        </p:tabView>
+                        <h:form id="editForm">
+                            <p:dialog header="Road signs" dynamic="true" widgetVar="roadsignsDialog" showEffect="clip"  hideEffect="explode" resizable="false">
+                                <p:outputPanel id="roadsignsDetail" style="text-align:center;">  
+                                    <h:form> 
+                                        <h:panelGrid columns="1" >
+                                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+                                                         layout="grid" styleClass="ui-fluid card">
+                                                <p:outputLabel value="Road sign"/>
+                                                <p:selectOneMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.roadsigns.signid}"  >
+                                                    <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{acc.signList}"  var="stats" itemValue="#{stats.idsigns}" itemLabel="#{stats.signname}" />
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="Date installed"/>
+                                                <p:calendar   style="width:200px"   value="#{acc.roadsigns.dateinstalled}" />
+                                                <p:outputLabel value="Description"/>
+                                                <p:inputTextarea   style="width:200px"   value="#{acc.roadsigns.description}" />
+                                                <p:outputLabel value="Name of place with sign"/>
+                                                <p:inputText   style="width:200px"   value="#{acc.roadsigns.placeName}" />
+                                                <p:outputLabel value="Road Name"/>
+                                                <p:inputText   style="width:200px"   value="#{acc.roadsigns.roadName}" />
+                                                <p:outputLabel value="Latitude"/>
+                                                <inputText   style="width:200px; color: orange" binding="#{latitude}" id="latitude"/>
+                                                <p:outputLabel value="Longitude"/>
+                                                <inputText   style="width:200px; color: orange" binding="#{longitude}" id="longitude"/>
+                                                <p:messages for="userForm"  showDetail="true" />
+                                            </p:panelGrid>
+                                            <h:panelGrid columns="8">
+                                                <p:commandButton value="SUBMIT"  icon="fa fa-plus" class="find-me" styleClass="btn-primary"  action="#{acc.updateRoadsign}"/>
+                                                <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </h:form>
+                                </p:outputPanel>
+                            </p:dialog>
+                        </h:form>
+                    </h:panelGrid>
+                </p:panel>
+            </div>
+        </div>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" styleClass="box-danger">
+            <p:commandButton value="Yes" type="button" styleClass="btn-primary ui-confirmdialog-yes"
+                             icon="fa fa-check"/>
+            <p:commandButton value="No" type="button" styleClass="btn-danger ui-confirmdialog-no"
+                             icon="fa fa-close"/>
+        </p:confirmDialog>
+
+        <script type="text/javascript">
+
+            window.onload = function() {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    console.log(lat.toFixed(8));
+                    console.log(lng.toFixed(8));
+
+                    var latitude = lat.toFixed(8);
+                    var longitude = lng.toFixed(8);
+
+
+                    document.getElementById('latitude').innerHTML = latitude;
+                    document.getElementById('latitude').value = latitude;
+                    document.getElementById('longitude').innerHTML = longitude;
+                    document.getElementById('longitude').value = longitude;
+                    $('.coordinates').addClass('visible');
+                });
+            };
+        </script>
+        <!--
+                <script type="text/javascript">
+                    function getAddress(latitude, longitude) {
+                        return new Promise(function (resolve, reject) {
+                            var request = new XMLHttpRequest();
+                            var method = 'GET';
+                            var url = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude + '&sensor=true';
+                            var async = true;
+                            request.open(method, url, async);
+                            request.onreadystatechange = function () {
+                                if (request.readyState == 4) {
+                                    if (request.status == 200) {
+                                        var data = JSON.parse(request.responseText);
+                                        var address = data.results[0];
+                                        resolve(address);
+                                    } else {
+                                        reject(request.status);
+                                    }
+                                }
+                            };
+                            request.send();
+                        });
+                    }
+        
+                </script>-->
+    </ui:define>
+
+
+</ui:composition>
