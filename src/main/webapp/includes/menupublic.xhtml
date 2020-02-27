@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ul class="sidebar-menu">
+        <li>
+            <p:link href="/index.xhtml" onclick="clearBreadCrumbs()">
+                <i class="fa fa-home"></i>
+                <span>Home</span>
+            </p:link>
+        </li>
+    
+        <li>
+            <p:link href="/mapspublic.xhtml">
+                <i class="fa fa-map-marker"></i>
+                <span>SIGN SPOTS</span>
+            </p:link>
+        </li>
+       
+         <li>
+            <p:link href="/vandalizedpublic.xhtml">
+                <i class="fa fa-dashboard"></i>
+                <span>REPORT VANDALIZED SIGN</span>
+            </p:link>
+        </li>
+          <li>
+            <p:link href="/index3.xhtml">
+                <i class="fa fa-dashboard"></i>
+                <span>ADMIN?</span>
+            </p:link>
+        </li>
+    </ul>
+    <script type="text/javascript">
+        $('.list > li a').click(function() {
+            $(this).parent().find('ul').toggle();
+        });
+    </script>
+</ui:composition>

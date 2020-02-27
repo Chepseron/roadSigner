@@ -13,6 +13,7 @@ import java.io.Serializable;
 public class LayoutMB implements Serializable {
 
     private String layout;
+    private String publicLayout;
 
     @PostConstruct
     public void init() {
@@ -29,5 +30,20 @@ public class LayoutMB implements Serializable {
 
     public void setDefaultLayout() {
         layout = "/WEB-INF/templates/template.xhtml";
+    }
+
+    /**
+     * @return the publicLayout
+     */
+    public String getPublicLayout() {
+          publicLayout = "/WEB-INF/templates/template2.xhtml";
+        return publicLayout;
+    }
+
+    /**
+     * @param publicLayout the publicLayout to set
+     */
+    public void setPublicLayout(String publicLayout) {
+        this.publicLayout = publicLayout;
     }
 }

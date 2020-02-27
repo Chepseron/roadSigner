@@ -6,7 +6,16 @@
 package BEAN;
 
 import com.amon.db.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -312,17 +321,19 @@ public class acc implements Serializable {
 
             System.out.println(latitude);
             System.out.println(longitude);
-            
-            
-            roadsigns.setLat(latitude);
-            roadsigns.setLongitude(longitude);
+
+            roadsigns.setLat("1.233255");
+            roadsigns.setLongitude("35.233255");
             roadsigns.setCreatedBy(1);
             roadsigns.setCreatedOn(new java.util.Date());
             roadsigns.setStatus(1);
-            
-            
-            System.out.println();
-            
+            roadsigns.setSignid(roadsigns.getSignid());
+            roadsigns.setDescription(roadsigns.getDescription());
+            roadsigns.setDateinstalled(roadsigns.getDateinstalled());
+            roadsigns.setPlaceName(roadsigns.getPlaceName());
+            roadsigns.setRoadName(roadsigns.getRoadName());
+            System.out.println(roadsigns.getLat() + " longitude " + longitude);
+
             getRoadsigns().setCreatedOn(new java.util.Date());
             getUtx().begin();
             getAudit().setAction("Registered road sign at " + getRoadsigns().getRoadName());
@@ -393,9 +404,23 @@ public class acc implements Serializable {
 
     public void createSign() {
         try {
+            try {
+                OutputStream out = new FileOutputStream(new File("C:\\Users\\Amon.sabul.CRAFTSILICON\\Documents\\NetBeansProjects\\roadSigner\\src\\main\\uploads" + file.getFileName()));
+                int read = 0;
+                byte[] bytes = new byte[1024];
 
+                while ((read = file.getInputstream().read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+                file.getInputstream().close();
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+            System.out.println("reached here +++++++++++++++++++++++++++++++++");
             getSigns().setCreatedOn(new java.util.Date());
-            getSigns().setPhoto("none");
+            getSigns().setPhoto(file.getFileName());
             getSigns().setCreatedBy(1);
             getSigns().setCreatedOn(new java.util.Date());
             getUtx().begin();

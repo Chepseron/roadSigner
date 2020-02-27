@@ -4,7 +4,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="#{layoutMB.layout}">
+                template="#{layoutMB.publicLayout}">
 
     <ui:define name="head-end">
         <ui:param name="renderBreadCrumb" value="true"/>
@@ -58,39 +58,8 @@
                     <h:panelGrid columns="1">
                         <p:growl id="msgs1" sticky="true" showDetail="true" />
                         <p:tabView  styleClass="si-icon-16x16 si-icon-edit"    style="background: transparent; width: 100%; height: 100%; border: 0" >  
-                            <p:tab title="ASSIGN A SIGN TO A ROAD" >
-                                <h:form id="activityForm" style="width: auto" > 
-
-                                    <h:panelGrid columns="1" >
-                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
-                                                     layout="grid" styleClass="ui-fluid card">
-                                            <p:outputLabel value="Road sign"/>
-                                            <p:selectOneMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.roadsigns.signid}"  >
-                                                <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
-                                                <f:selectItems value="#{acc.signList}"  var="stats" itemValue="#{stats.idsigns}" itemLabel="#{stats.signname}" />
-                                            </p:selectOneMenu>
-                                            <p:outputLabel value="Date installed"/>
-                                            <p:calendar   style="width:200px"   value="#{acc.roadsigns.dateinstalled}" />
-                                            <p:outputLabel value="Description"/>
-                                            <p:inputTextarea   style="width:200px"   value="#{acc.roadsigns.description}" />
-                                            <p:outputLabel value="Name of place with sign"/>
-                                            <p:inputText   style="width:200px"   value="#{acc.roadsigns.placeName}" />
-                                            <p:outputLabel value="Road Name"/>
-                                            <p:inputText   style="width:200px"   value="#{acc.roadsigns.roadName}" />
-                                            <p:outputLabel value="Latitude"/>
-                                            <inputText   style="width:200px; color: orange" readonly="true" binding="#{latitude}" id="latitude"/>
-                                            <p:outputLabel value="Longitude"/>
-                                            <inputText   style="width:200px; color: orange" readonly="true" binding="#{longitude}" id="longitude"/>
-                                            <p:messages for="userForm"  showDetail="true" />
-                                        </p:panelGrid>
-                                        <h:panelGrid columns="8">
-                                            <p:commandButton value="SUBMIT"  icon="fa fa-plus" class="find-me" styleClass="btn-primary"  action="#{acc.createRoadsign(latitude.value,longitude.value)}"/>
-                                            <p:commandButton value="LOGOUT"   action="#{acc.logout}"  icon="fa fa-sign-out" styleClass="btn-primary" />
-                                        </h:panelGrid>
-                                    </h:panelGrid>
-                                </h:form>
-                            </p:tab>
-                            <p:tab title="REGISTERED ROAD SIGNS">
+                            
+                            <p:tab title="REPORT VANDALIZED ROAD SIGNS">
                                 <h:form id="roadsignsForm" style="width: auto" >
                                     <p:dataTable var="roadsigns" value="#{acc.roadsignList}" 
                                                  paginator="true" rows="10"
