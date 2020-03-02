@@ -114,11 +114,17 @@
                                         <p:column filterBy="#{roadsigns.lat}" sortBy="#{roadsigns.lat}" headerText="Latitude">
                                             <p:outputLabel value="#{roadsigns.lat}" />
                                         </p:column>
-                                        <p:column filterBy="#{roadsigns.long1}" sortBy="#{roadsigns.long1}" headerText="Longitude">
-                                            <p:outputLabel value="#{roadsigns.long1}" />
+                                        <p:column filterBy="#{roadsigns.longitude}" sortBy="#{roadsigns.longitude}" headerText="Longitude">
+                                            <p:outputLabel value="#{roadsigns.longitude}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.signid.signname}" sortBy="#{roadsigns.signid.signname}" headerText="sign name">
+                                            <p:outputLabel value="#{roadsigns.signid.signname}" />
                                         </p:column>
                                         <p:column filterBy="#{roadsigns.placeName}" sortBy="#{roadsigns.placeName}" headerText="placeName">
                                             <p:outputLabel value="#{roadsigns.placeName}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.signid.photo}" sortBy="#{roadsigns.signid.photo}" headerText="photo">
+                                            <h:graphicImage width="40px" height="40px" style="border-radius: 20%;" url="#{roadsigns.signid.photo}"></h:graphicImage>
                                         </p:column>
                                         <p:column style="width:4%">
                                             <p:commandLink process="@this" styleClass="si-icon-16x16 si-icon-edit" update=":editForm:roadsignsDetail" oncomplete="PF('roadsignsDialog').show()"  value="DETAILS"   title="Edit  #{roadsigns.roadName}'s DETAILS">                                                  
@@ -177,8 +183,8 @@
 
         <script type="text/javascript">
 
-            window.onload = function() {
-                navigator.geolocation.getCurrentPosition(function(position) {
+            window.onload = function () {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
                     console.log(lat.toFixed(8));

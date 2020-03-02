@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.amon.db;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,29 +17,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author Anonymous
+ * @author Amon.Sabul
  */
 @Entity
 @Table(name = "signs")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Signs.findAll", query = "SELECT s FROM Signs s"),
-    @NamedQuery(name = "Signs.findByIdsigns", query = "SELECT s FROM Signs s WHERE s.idsigns = :idsigns"),
-    @NamedQuery(name = "Signs.findBySignname", query = "SELECT s FROM Signs s WHERE s.signname = :signname"),
-    @NamedQuery(name = "Signs.findByDescription", query = "SELECT s FROM Signs s WHERE s.description = :description"),
-    @NamedQuery(name = "Signs.findByCreatedBy", query = "SELECT s FROM Signs s WHERE s.createdBy = :createdBy"),
-    @NamedQuery(name = "Signs.findByCreatedOn", query = "SELECT s FROM Signs s WHERE s.createdOn = :createdOn"),
-    @NamedQuery(name = "Signs.findByPhoto", query = "SELECT s FROM Signs s WHERE s.photo = :photo")})
+    @NamedQuery(name = "Signs.findAll", query = "SELECT s FROM Signs s")
+    , @NamedQuery(name = "Signs.findByIdsigns", query = "SELECT s FROM Signs s WHERE s.idsigns = :idsigns")
+    , @NamedQuery(name = "Signs.findBySignname", query = "SELECT s FROM Signs s WHERE s.signname = :signname")
+    , @NamedQuery(name = "Signs.findByDescription", query = "SELECT s FROM Signs s WHERE s.description = :description")
+    , @NamedQuery(name = "Signs.findByCreatedBy", query = "SELECT s FROM Signs s WHERE s.createdBy = :createdBy")
+    , @NamedQuery(name = "Signs.findByCreatedOn", query = "SELECT s FROM Signs s WHERE s.createdOn = :createdOn")
+    , @NamedQuery(name = "Signs.findByPhoto", query = "SELECT s FROM Signs s WHERE s.photo = :photo")})
 public class Signs implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +73,8 @@ public class Signs implements Serializable {
     @Size(min = 1, max = 100)
     @Column(name = "photo")
     private String photo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "signid")
+    private Collection<Roadsigns> roadsignsCollection;
 
     public Signs() {
     }
@@ -132,6 +138,15 @@ public class Signs implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    @XmlTransient
+    public Collection<Roadsigns> getRoadsignsCollection() {
+        return roadsignsCollection;
+    }
+
+    public void setRoadsignsCollection(Collection<Roadsigns> roadsignsCollection) {
+        this.roadsignsCollection = roadsignsCollection;
     }
 
     @Override

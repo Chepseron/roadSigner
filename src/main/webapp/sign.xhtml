@@ -67,11 +67,14 @@
                                             <p:inputTextarea    value="#{acc.signs.description}" />
 
                                         </p:panelGrid>
+                                        <h:panelGrid columns="8">
+                                            <p:commandButton value="SAVE SIGN"  ajax="false" icon="fa fa-plus" styleClass="btn-primary"  action="#{acc.createSign}" />
+                                        </h:panelGrid>
                                         <h:panelGrid columns="1">
 
                                             <p:outputLabel value="Sign Photo"/>
-                                            <p:fileUpload value="#{acc.file}" fileUploadListener="#{acc.createSign}" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  mode="advanced" 
-                                                          dragDropSupport="false" update="messages" sizeLimit="1000000" fileLimit="3"/>
+                                            <p:fileUpload fileUploadListener="#{acc.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                                          multiple="true" update="messages" sizeLimit="1200000"  allowTypes="/(\.|\/)(gif|bmp|jpe?g|txt)$/" />
                                             <p:messages for="userForm"  showDetail="true" />
                                         </h:panelGrid>
                                     </h:panelGrid>
@@ -97,7 +100,10 @@
                                         <p:column filterBy="#{signs.description}" sortBy="#{signs.description}" headerText="Description">
                                             <p:outputLabel value="#{signs.description}" />
                                         </p:column>
-                                        <p:column style="width:4%">
+                                        <p:column filterBy="#{signs.photo}" sortBy="#{signs.photo}" headerText="Description">
+                                            <h:graphicImage width="40px" height="40px" style="border-radius: 20%;" url="#{signs.photo}"></h:graphicImage>
+                                        </p:column>
+                                        <p:column style="width:4%" >
                                             <p:commandLink process="@this" styleClass="si-icon-16x16 si-icon-edit" update=":editForm:signsDetail" oncomplete="PF('signsDialog').show()"  value="DETAILS"   title="Edit  #{signs.signname}'s DETAILS">                                                  
                                                 <f:setPropertyActionListener value="#{signs}"   target="#{acc.signs}" />  
                                             </p:commandLink>

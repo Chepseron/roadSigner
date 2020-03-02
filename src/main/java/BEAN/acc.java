@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -30,7 +31,10 @@ import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpSession;
 import javax.transaction.UserTransaction;
+import org.apache.commons.io.FilenameUtils;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.map.OverlaySelectEvent;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.chart.Axis;
@@ -91,7 +95,7 @@ public class acc implements Serializable {
             setAdvancedModel(new DefaultMapModel());
             setRoadsignList((List<Roadsigns>) getEm().createQuery("select r from Roadsigns r").getResultList());
             for (Roadsigns c : getRoadsignList()) {
-                getAdvancedModel().addOverlay(new Marker(new LatLng(Double.parseDouble(c.getLat()), Double.parseDouble(c.getLongitude())), "Road Name:" + c.getRoadName(), "images\barcode.gif", "http://maps.google.com/mapfiles/ms/micons/blue-dot.png"));
+                getAdvancedModel().addOverlay(new Marker(new LatLng(Double.parseDouble(c.getLat()), Double.parseDouble(c.getLongitude())), "Road Name:" + c.getRoadName() + "\nSign Name:" + c.getSignid().getSignname() + "\nSign Description:" + c.getSignid().getDescription() + "\nPlace Installed:" + c.getPlaceName() + "\nDate Installed:" + c.getDateinstalled(), "images\barcode.gif", "http://maps.google.com/mapfiles/ms/micons/blue-dot.png"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -402,44 +406,58 @@ public class acc implements Serializable {
         return null;
     }
 
+    public void handleFileUpload(FileUploadEvent event) {
+        if (event.getFile() != null) {
+            try {
+                FacesContext fCtx = FacesContext.getCurrentInstance();
+                HttpSession session = (HttpSession) fCtx.getExternalContext().getSession(false);
+                String rootDirectory = session.getServletContext().getRealPath("/");
+                System.out.println(rootDirectory + "uploads");
+                Path path2 = Paths.get(rootDirectory + "uploads");
+                System.out.println("File name " + event.getFile().getFileName());
+                String prefix = FilenameUtils.getBaseName(event.getFile().getFileName());
+                String suffix = FilenameUtils.getExtension(event.getFile().getFileName());
+                File save = File.createTempFile(prefix + "-", "." + suffix, path2.toFile());
+
+                Files.write(save.toPath(), event.getFile().getContents(), new OpenOption[0]);
+                Path path = save.toPath();
+
+                signs.setPhoto("uploads\\" + path.getFileName());
+                utx.begin();
+                em.persist(audit);
+                em.persist(signs);
+                utx.commit();
+                signs = new Signs();
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success!", "Sign " + event.getFile().getFileName() + " Image uploaded successfully"));
+            } catch (Exception ex) {
+
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Could not upload the sign photo please try again"));
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public void createSign() {
         try {
-            try {
-                OutputStream out = new FileOutputStream(new File("C:\\Users\\Amon.sabul.CRAFTSILICON\\Documents\\NetBeansProjects\\roadSigner\\src\\main\\uploads" + file.getFileName()));
-                int read = 0;
-                byte[] bytes = new byte[1024];
 
-                while ((read = file.getInputstream().read(bytes)) != -1) {
-                    out.write(bytes, 0, read);
-                }
-                file.getInputstream().close();
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-            System.out.println("reached here +++++++++++++++++++++++++++++++++");
             getSigns().setCreatedOn(new java.util.Date());
-            getSigns().setPhoto(file.getFileName());
+            getSigns().setPhoto("");
             getSigns().setCreatedBy(1);
             getSigns().setCreatedOn(new java.util.Date());
-            getUtx().begin();
+            getSigns().setDescription(signs.getDescription());
+            getSigns().setSignname(signs.getSignname());
             getAudit().setAction("Registered road sign: " + getSigns().getSignname());
             getAudit().setCreatedby(1);
             getAudit().setTimer(new Date());
-            getEm().persist(getAudit());
-            getEm().persist(getSigns());
-            getUtx().commit();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success!", "Sign " + file.getFileName() + " is uploaded " + getSigns().getSignname() + " has been registered."));
-            setSigns(new Signs());
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success!", "Sign has been registered. please proceed and upload the photo"));
         } catch (Exception ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", ex.getMessage()));
             ex.printStackTrace();
         }
-        setSigns(new Signs());
     }
 
-    public String updateSign() {
+    public String
+            updateSign() {
         try {
             Signs sign = getEm().find(Signs.class,
                     getSigns().getIdsigns());
@@ -509,7 +527,8 @@ public class acc implements Serializable {
         return null;
     }
 
-    public String updateStatus() {
+    public String
+            updateStatus() {
         try {
 
             Status status = getEm().find(Status.class,

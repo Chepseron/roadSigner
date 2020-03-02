@@ -58,7 +58,7 @@
                     <h:panelGrid columns="1">
                         <p:growl id="msgs1" sticky="true" showDetail="true" />
                         <p:tabView  styleClass="si-icon-16x16 si-icon-edit"    style="background: transparent; width: 100%; height: 100%; border: 0" >  
-                            
+
                             <p:tab title="REPORT VANDALIZED ROAD SIGNS">
                                 <h:form id="roadsignsForm" style="width: auto" >
                                     <p:dataTable var="roadsigns" value="#{acc.roadsignList}" 
@@ -71,23 +71,21 @@
                                         <p:column filterBy="#{roadsigns.roadName}" sortBy="#{roadsigns.roadName}" headerText="Road Name">
                                             <p:outputLabel value="#{roadsigns.roadName}" />
                                         </p:column>
-                                        <p:column filterBy="#{roadsigns.createdBy}" sortBy="#{roadsigns.createdBy}" headerText="Registered BY">
-                                            <p:outputLabel value="#{roadsigns.createdBy}" />
-                                        </p:column>
-                                        <p:column filterBy="#{roadsigns.createdOn}" sortBy="#{roadsigns.createdOn}" headerText="created On">
-                                            <p:outputLabel value="#{roadsigns.createdOn}" />
-                                        </p:column>
+
                                         <p:column filterBy="#{roadsigns.dateinstalled}" sortBy="#{roadsigns.dateinstalled}" headerText="Date Installed">
                                             <p:outputLabel value="#{roadsigns.dateinstalled}" />
                                         </p:column>
                                         <p:column filterBy="#{roadsigns.lat}" sortBy="#{roadsigns.lat}" headerText="Latitude">
                                             <p:outputLabel value="#{roadsigns.lat}" />
                                         </p:column>
-                                        <p:column filterBy="#{roadsigns.long1}" sortBy="#{roadsigns.long1}" headerText="Longitude">
-                                            <p:outputLabel value="#{roadsigns.long1}" />
+                                        <p:column filterBy="#{roadsigns.longitude}" sortBy="#{roadsigns.longitude}" headerText="Longitude">
+                                            <p:outputLabel value="#{roadsigns.longitude}" />
                                         </p:column>
                                         <p:column filterBy="#{roadsigns.placeName}" sortBy="#{roadsigns.placeName}" headerText="placeName">
                                             <p:outputLabel value="#{roadsigns.placeName}" />
+                                        </p:column>
+                                        <p:column filterBy="#{roadsigns.signid.photo}" sortBy="#{roadsigns.signid.photo}" headerText="photo">
+                                            <h:graphicImage width="40px" height="40px" style="border-radius: 20%;" url="#{roadsigns.signid.photo}"></h:graphicImage>
                                         </p:column>
                                         <p:column style="width:4%">
                                             <p:commandLink process="@this" styleClass="si-icon-16x16 si-icon-edit" update=":editForm:roadsignsDetail" oncomplete="PF('roadsignsDialog').show()"  value="DETAILS"   title="Edit  #{roadsigns.roadName}'s DETAILS">                                                  
@@ -122,6 +120,11 @@
                                                 <inputText   style="width:200px; color: orange" binding="#{latitude}" id="latitude"/>
                                                 <p:outputLabel value="Longitude"/>
                                                 <inputText   style="width:200px; color: orange" binding="#{longitude}" id="longitude"/>
+                                                <p:outputLabel value="Status"/>
+                                                <p:selectOneMenu    converter="#{convertor}" immediate="true"   style="width: 200px" value="#{acc.roadsigns.status}"  >
+                                                    <f:selectItem itemLabel=" " itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{acc.statusList}"  var="stats" itemValue="#{stats.idstatus}" itemLabel="#{stats.name}" />
+                                                </p:selectOneMenu>
                                                 <p:messages for="userForm"  showDetail="true" />
                                             </p:panelGrid>
                                             <h:panelGrid columns="8">
@@ -146,8 +149,8 @@
 
         <script type="text/javascript">
 
-            window.onload = function() {
-                navigator.geolocation.getCurrentPosition(function(position) {
+            window.onload = function () {
+                navigator.geolocation.getCurrentPosition(function (position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
                     console.log(lat.toFixed(8));
